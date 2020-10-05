@@ -18,7 +18,7 @@ That answer must then be synthesized into an audio clip, which can be broken up 
 Latency is defined as the time between the last audio chunk being sent to the server and the first response from the server, which contains a part (or all) of the synthesized audio with the answer to the question.
 
 A submission should report the following results:
-- Latency statistics as a function of the number of concurrent streams.  Latency statistics include average latency, P590, P90, P95, and P99.
+- Latency statistics as a function of the number of concurrent streams.  Latency statistics include average latency, P50, P90, P95, and P99.
 - F1 and Accuracy scores for the SQuAD results (evaluated based on the text that is received from the NLP output).  Since we only use the public SQuAD evaluation set and not the held-out test set, these scores are approximate only.  However, this provides a measurement of the accuracy of the combined end-to-end system and is sufficient for benchmarking tradeoffs between speed and accuracy.
 - Percent of audio stream responses that have missing or late packets.
 - (Optional) Mean Opinion Score (MOS) for the resulting TTS audio recordings.  Since MOS requires subjective evaluation, we provide scripts and templates a submitter could use on a service like Amazon Mechanical Turk.
