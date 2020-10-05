@@ -1,0 +1,48 @@
+workspace(name = "com_nvidia_speech")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "googletest",
+    url = "https://github.com/google/googletest/archive/release-1.8.1.tar.gz",
+    sha256 = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c",
+    strip_prefix = "googletest-release-1.8.1",
+)
+
+http_archive(
+    name = "com_github_gflags_gflags",
+    strip_prefix = "gflags-2.2.2",
+    sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
+    urls = [
+        "https://github.com/gflags/gflags/archive/v2.2.2.tar.gz",
+    ],
+)
+
+http_archive(
+    name = "glog",
+    urls = ["https://github.com/google/glog/archive/v0.4.0.tar.gz"],
+    sha256 = "f28359aeba12f30d73d9e4711ef356dc842886968112162bc73002645139c39c",
+    strip_prefix = "glog-0.4.0",
+)
+
+new_local_repository(
+    name = "kaldi",
+    path = "/opt/kaldi",
+    build_file = "external/BUILD.kaldi"
+)
+
+http_archive(
+    name = "com_github_grpc_grpc",
+    sha256 = "03a22a2fbfec8ccc44ff2e8061c312c9b4a0d33046b6d0c84c8eca5c56569387",
+    urls = [
+        "https://github.com/grpc/grpc/archive/v1.24.0.tar.gz",
+    ],
+    strip_prefix = "grpc-1.24.0",
+)
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl", "grpc_deps")
+grpc_deps()
+
+# TODO: `grpc_extra_deps` should be pulled from @com_github_grpc_grpc. It is missing
+# in versions < grpc-1.26.0. Once we upgrade past v1.26.0, we should pull this fn
+# directly from the source and remove src/trtis/utils/grpc_extra_deps.bzl.
+load(":grpc_extra_deps.bzl", "grpc_extra_deps")
+grpc_extra_deps()

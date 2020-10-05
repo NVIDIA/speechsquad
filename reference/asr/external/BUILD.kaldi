@@ -1,0 +1,15 @@
+package(
+  default_visibility = ["//visibility:public"],
+)
+cc_library(
+    name = "kaldi",
+    includes = ["src"],
+    strip_include_prefix = "src/",
+    srcs = glob(["src/lib/*.so", "src/**/*.h"])
+)
+cc_library(
+    name = "fst",
+    includes = ["tools/openfst-1.6.7/include"],
+    strip_include_prefix = "tools/openfst-1.6.7/include",
+    srcs = glob(["tools/openfst-1.6.7/lib/*.so", "tools/openfst-1.6.7/include/**/*.h"])
+)

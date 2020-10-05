@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+enum AudioEncoding {
+	LINEAR_PCM = 0;
+}
+
+message AudioConfig {
+
+	AudioEncoding encoding = 1;
+	int32 sample_rate_hertz = 2;
+	string language_code = 3;
+	int32 audio_channel_count = 4;
+}
+
+message SpeechSquadConfig {
+
+	AudioConfig input_audio_config = 1;
+	AudioConfig output_audio_config = 2;
+	string squad_context = 3;
+}
+
+message SpeechSquadInferRequest {
+  oneof infer_request {
+	SpeechSquadConfig speech_squad_config = 1;
+	bytes audio_content = 2;
+  }
+}
+
+message SpeechSquadResponseMeta {
+
+// mandatory
+string squad_question = 1;
+string squad_answer = 2;
+
+// optional
+float squad_confidence = 10;
+string asr_transcription = 11;
+string asr_confidence = 12;
+map<string, float> component_timing = 13;
+
+}
+
+message SpeechSquadInferResponse {
+	oneof infer_response {
+		SpeechSquadResponseMeta metadata = 1;
+		bytes audio_content = 2;
+    }
+}
+
+service SpeechSquadService
+{
+  rpc SpeechSquadInfer(stream SpeechSquadInferRequest)
+  	returns (stream SpeechSquadInferResponse)
+  {
+  }
+}

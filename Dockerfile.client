@@ -1,0 +1,60 @@
+# Copyright (c) 2020, NVIDIA CORPORATION.  All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# stage 1 - development container
+# holds the core nvidia libraries but does not container the project source code
+# use this container for development by mapping our source into the image which
+# persists your source code outside of the container lifecycle
+
+FROM ubuntu:18.04 AS base
+
+RUN apt update
+RUN apt install -y clang-format \
+    libssl-dev \
+    openssl \
+    libz-dev \
+    software-properties-common \
+    build-essential \
+    git \
+    rapidjson-dev \
+    libopenmpi-dev
+
+# remove base cmake
+RUN apt remove --purge -y cmake
+RUN apt autoremove -y
+RUN apt autoclean -y
+RUN apt update
+
+# install cmake ppa from kitware - https://apt.kitware.com/
+RUN apt install -y apt-transport-https ca-certificates gnupg software-properties-common wget
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
+RUN apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+RUN apt update && apt install -y cmake
+
+# then remove FindGTest.cmake installed by cmake
+RUN find / -name "FindGTest.cmake" -exec rm -f {} \;
+
+# stage 2: build the project inside the dev container
+
+FROM base AS speech_squad_client
+
+WORKDIR /work
+
+COPY . .
+
+# FIXME: The copy of the lib should not be needed
+RUN mkdir builddir && cd builddir && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/workspace/install ../build; \
+    make -j$(nproc) client; make -j$(nproc) client && \
+    cp /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/* /usr/local/lib/ | true

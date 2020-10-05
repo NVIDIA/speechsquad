@@ -1,0 +1,6 @@
+# .bazelrc
+build --show_timestamps --keep_going --color=yes --cxxopt='-std=c++1z'
+
+build:debug --compilation_mode dbg 
+
+build:release --compilation_mode opt
