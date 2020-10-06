@@ -20,5 +20,5 @@ protoc.main((
     '-Iprotos',
     '--python_out=.',
     '--grpc_python_out=.',
-    'protos/jarvis_nlp.proto',
+    'proto/jarvis_nlp.proto',
 ))
