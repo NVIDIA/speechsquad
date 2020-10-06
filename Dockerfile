@@ -50,14 +50,22 @@ RUN find / -name "FindGTest.cmake" -exec rm -f {} \;
 
 # stage 2: build the project inside the dev container
 
-FROM base AS speech_squad_client
+FROM base AS builder
 
 WORKDIR /work
 
-COPY . .
+COPY build build
+COPY client client
+COPY server server
+COPY reference/speech_squad.proto reference/
 
 # FIXME: The copy of the lib should not be needed
 RUN mkdir builddir && cd builddir && \
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local ../build; \
     make -j && \
-    cp /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/*.so /usr/local/lib/
+    cp /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/*.so* /usr/local/lib/
+
+FROM base AS speechsquad
+ENV LD_LIBRARY_PATH=/usr/local/lib
+COPY --from=builder /usr/local/bin/speechsquad_* /usr/local/bin/
+COPY --from=builder /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/*.so* /usr/local/lib/
