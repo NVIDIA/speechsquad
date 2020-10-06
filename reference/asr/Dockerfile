@@ -32,7 +32,8 @@ RUN apt-get update && apt-get install -y \
     sox \
     libflac++-dev \
     parallel \
-    git
+    git  \
+    && rm -rf /var/lib/apt/lists/*
 
 # Moving Kaldi to container
 RUN rm -fr /opt/kaldi
