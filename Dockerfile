@@ -19,8 +19,8 @@
 
 FROM ubuntu:18.04 AS base
 
-RUN apt update
-RUN apt install -y clang-format \
+# install dependencies, and remove base cmake
+RUN apt update && apt install -y clang-format \
     libssl-dev \
     openssl \
     libz-dev \
@@ -28,19 +28,22 @@ RUN apt install -y clang-format \
     build-essential \
     git \
     rapidjson-dev \
-    libopenmpi-dev
-
-# remove base cmake
-RUN apt remove --purge -y cmake
-RUN apt autoremove -y
-RUN apt autoclean -y
-RUN apt update
+    libopenmpi-dev \
+    && apt remove --purge -y cmake \
+    && apt autoremove -y \
+    && apt autoclean -y \
+    && rm -rf /var/lib/apt/lists/*
 
 # install cmake ppa from kitware - https://apt.kitware.com/
-RUN apt install -y apt-transport-https ca-certificates gnupg software-properties-common wget
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
-RUN apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
-RUN apt update && apt install -y cmake
+RUN apt update && apt install -y \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    software-properties-common \
+    wget \
+    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add - \
+    && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' \
+    && apt update && apt install -y cmake && rm -rf /var/lib/apt/lists/*
 
 # then remove FindGTest.cmake installed by cmake
 RUN find / -name "FindGTest.cmake" -exec rm -f {} \;
@@ -55,6 +58,6 @@ COPY . .
 
 # FIXME: The copy of the lib should not be needed
 RUN mkdir builddir && cd builddir && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/workspace/install ../build; \
-    make -j$(nproc) client; make -j$(nproc) client && \
-    cp /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/* /usr/local/lib/ | true
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr/local ../build; \
+    make -j && \
+    cp /work/builddir/trtlab-prefix/src/trtlab-build/local/lib/*.so /usr/local/lib/

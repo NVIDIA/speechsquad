@@ -41,14 +41,14 @@ set(
 )
 
 add_executable(
-  squad_perf_client
+  speechsquad_perf_client
   ${SQUAD_PERF_CLIENT_SRCS}
   ${SQUAD_PERF_CLIENT_HDRS}
 )
 
 find_package(MPI)
 include_directories(SYSTEM ${MPI_INCLUDE_PATH})
-target_link_libraries(squad_perf_client
+target_link_libraries(speechsquad_perf_client
   PRIVATE
     ${MPI_C_LIBRARIES}
     ${MPI_CXX_LIBRARIES}
@@ -64,16 +64,16 @@ target_link_libraries(squad_perf_client
     Boost::context
 )
 
-target_compile_definitions(squad_perf_client PUBLIC PLAYGROUND_USE_MPI)
+target_compile_definitions(speechsquad_perf_client PUBLIC PLAYGROUND_USE_MPI)
 
 find_package(RapidJSON CONFIG REQUIRED)
-target_include_directories(squad_perf_client
+target_include_directories(speechsquad_perf_client
   PUBLIC
     ${RapidJSON_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}/../
 )
 
 install(
-  TARGETS squad_perf_client
+  TARGETS speechsquad_perf_client
   RUNTIME DESTINATION bin
 )

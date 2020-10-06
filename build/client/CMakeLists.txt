@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required (VERSION 3.9)
+cmake_minimum_required (VERSION 3.18)
 project (client)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -23,13 +23,13 @@ set(GFLAGS_NOTHREADS TRUE)
 find_package(gflags)
 find_package(RapidJSON)
 
-set(protobuf_MODULE_COMPATIBLE TRUE)
+set(protobuf_MODULE_COMPATIBLE ON CACHE BOOL "")
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${protobuf_VERSION}")
 set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
 set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
 
-message(STATUS "CAMKE ${CMAKE_MODULE_PATH}")
+message(STATUS "CMAKE Module path: ${CMAKE_MODULE_PATH}")
 
 INCLUDE(GRPCGenerateCPP)
 
