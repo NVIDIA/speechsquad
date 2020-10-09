@@ -69,16 +69,12 @@ Status ValidateConfig(nj_asr::RecognitionConfig &config, int numchannels,
   return Status::OK;
 }
 
-ASRServiceImpl::ASRServiceImpl() {
+ASRServiceImpl::ASRServiceImpl(const std::string& kaldi_path, const std::string& kaldi_options) {
   LOG(INFO) << "KALDI CPU ASR coming up...";
-
-  const char *kaldi_path = getenv("KALDI_MODEL_PATH");
-  if (!kaldi_path)
-    kaldi_path = "/data/models/LibriSpeech";
 
   use_kaldi_cpu_asr_ = true;
 
-  kaldi_cpu_asr_ = new KaldiASRContext(kaldi_path);
+  kaldi_cpu_asr_ = new KaldiASRContext(kaldi_path, kaldi_options);
   if (kaldi_cpu_asr_->Initialize() != 0) {
     std::cerr << "unable to create Kaldi object\n";
     exit(1);

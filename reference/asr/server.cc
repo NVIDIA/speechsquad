@@ -29,6 +29,8 @@ using grpc::Server;
 using grpc::ServerBuilder;
 
 DEFINE_string(uri, "0.0.0.0:50051", "URI this server should bind to");
+DEFINE_string(model_path, "/data/models/LibriSpeech", "Path to trained Kaldi model");
+DEFINE_string(model_options, "", "Kaldi model options");
 
 void RunServer() {
   ServerBuilder builder;
@@ -37,7 +39,7 @@ void RunServer() {
   // Listen on the given address without any authentication mechanism.
   builder.AddListeningPort(FLAGS_uri, grpc::InsecureServerCredentials());
 
-  asr_service = std::make_unique<ASRServiceImpl>();
+  asr_service = std::make_unique<ASRServiceImpl>(FLAGS_model_path, FLAGS_model_options);
   builder.RegisterService(asr_service.get());
 
   // Finally assemble the server.

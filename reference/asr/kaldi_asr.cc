@@ -31,9 +31,8 @@ using std::cerr;
 
 using namespace kaldi;
 
-KaldiASRContext::KaldiASRContext(const std::string &model_path)
-    : //  = "/data/models/LibriSpeech"):
-      model_path_(model_path) {}
+KaldiASRContext::KaldiASRContext(const std::string &model_path, const std::string &model_options)
+  : model_path_(model_path), model_options_(model_options) {}
 
 KaldiASRContext::~KaldiASRContext() { delete word_syms_; }
 
@@ -76,26 +75,22 @@ int KaldiASRContext::Initialize() {
   po.ReadConfigFile(model_path_ + "/conf/online.conf");
 
   // check command line override
-
-  const char *optstr = getenv("KALDI_MODEL_OPTIONS");
-
-  if (optstr) {
-    try {
-      char *save, *cur, *prev;
-      std::vector<char *> argv;
-      std::string kaldi_opts = optstr;
-
-      for (cur = prev = kaldi_opts.data(); cur;) {
-        argv.push_back(cur);
-        cur = strtok_r(prev, " \t", &save);
-        prev = NULL;
-      }
-      po.Read(argv.size(), argv.data());
-    } catch (std::exception e) {
-      KALDI_LOG << "Failed to read KALDI_MODEL_OPTIONS.";
-      return 1;
+  try {
+    char *save, *cur, *prev;
+    std::vector<char *> argv;
+    std::string kaldi_opts = model_options_;
+    
+    for (cur = prev = kaldi_opts.data(); cur;) {
+      argv.push_back(cur);
+      cur = strtok_r(prev, " \t", &save);
+      prev = NULL;
     }
+    po.Read(argv.size(), argv.data());
+  } catch (std::exception e) {
+    KALDI_LOG << "Failed to parse Kaldi model options!";
+    return 1;
   }
+
   bool binary;
   kaldi::Input ki(nnet3_rxfilename_, &binary);
   trans_model_.Read(ki.Stream(), binary);
@@ -126,8 +121,7 @@ int KaldiASRContext::Initialize() {
   decodable_info_.reset(
       new nnet3::DecodableNnetSimpleLoopedInfo(compute_opts, &am_nnet_));
 
-  std::cerr << "Kaldi config options are below. To override, set "
-               "KALDI_MODEL_OPTIONS environment variable:";
+  std::cerr << "Kaldi config options are below. To override, use --model_options flag:";
 
   po.PrintConfig(std::cerr);
   return 0;

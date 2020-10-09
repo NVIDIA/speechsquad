@@ -39,11 +39,12 @@ public:
   // init kaldi pipeline
   int Initialize();
 
-  KaldiASRContext(const std::string &path);
+  KaldiASRContext(const std::string &path, const std::string& options);
   ~KaldiASRContext();
 
   // Models paths
-  std::string model_path_;
+  std::string model_path_, model_options_;
+  
   std::string nnet3_rxfilename_, fst_rxfilename_;
   std::string word_syms_rxfilename_;
 

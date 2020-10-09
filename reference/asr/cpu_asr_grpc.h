@@ -39,7 +39,7 @@ class KaldiASRContext;
 class ASRServiceImpl final : public nj_asr::JarvisASR::Service {
   // Logic and data behind the server's behavior.
 public:
-  explicit ASRServiceImpl();
+  explicit ASRServiceImpl(const std::string& kaldi_path, const std::string& kaldi_options);
   ~ASRServiceImpl();
   Status Recognize(ServerContext *context,
                    const nj_asr::RecognizeRequest *request,
