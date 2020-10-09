@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
     sox \
     libflac++-dev \
     parallel \
-    git  \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
 # Moving Kaldi to container
@@ -114,11 +114,8 @@ COPY --from=kaldi /opt/intel/mkl/lib/intel64/ /opt/intel/mkl/lib/intel64/
 COPY --from=kaldi /opt/intel/mkl/lib/intel64_lin/ /opt/intel/mkl/lib/intel64_lin/
 
 COPY --from=builder /work/bazel-bin/kaldi_cpu_asr_server /usr/local/bin/
-# COPY --from=builder /work/proto/ /work/proto/
+COPY --from=builder /work/proto/ /work/proto/
 COPY --from=builder /work/kaldi_asr.conf /work/
 COPY --from=builder /data/models/LibriSpeech /data/models/LibriSpeech
 
-ENV KALDI_MODEL_PATH="/data/models/LibriSpeech"
-ENV KALDI_MODEL_OPTIONS="--config=/work/kaldi_asr.conf"
-# ENV LD_LIBRARY_PATH "/opt/kaldi/src/lib/:/opt/kaldi/tools/openfst-1.6.7/lib:$LD_LIBRARY_PATH"
 ENV LD_LIBRARY_PATH "/opt/kaldi/src/lib/:/opt/kaldi/tools/openfst-1.6.7/lib:/opt/intel/mkl/lib/intel64/:$LD_LIBRARY_PATH"
