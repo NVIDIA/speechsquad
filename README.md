@@ -62,15 +62,15 @@ Participants are free to choose the scale at which they want to run the benchmar
 ## Alpha Release
 Please note that this is a public alpha release, so the code has undergone limited testing.  Please file issues or ask questions about the code using the github issues tracker.
 
-In the current release, NVIDIA is providing the following:
+In the current release of SpeechSquad, NVIDIA is providing the following:
 - [Performance measurement client](https://github.com/nvidia/speechsquad/tree/master/client) that is capable of sending synthetic requests at different scales and measuring response latency, throughput, and accuracy.
 - [SpeechSquad service implementation](https://github.com/nvidia/speechsquad/tree/master/server) for coordinating across microservices.
-- [Helm charts](https://github.com/nvidia/speechsquad/tree/master/helm) for deploying and running the benchmark at different scales available here.
 - CPU microservice reference implementations:
     - [ASR gRPC service](https://github.com/nvidia/speechsquad/tree/master/reference/asr) implemented with Kaldi running TDNN LibriSpeech model.
-    - [Question Answering gRPC service](https://github.com/nvidia/speechsquad/tree/master/reference/qa) implemented with Huggingface Transformers DistilliBERT trained on SQUAD 2.0.
-    - For the TTS portion, we recommend MaryTTS but are not providing an implementation at this time.
-- Reference implementation on the GPU uses NVIDIA Jarvis. Learn more about Jarvis and signup here: https://developer.nvidia.com/nvidia-jarvis
+    - [Question Answering gRPC service](https://github.com/nvidia/speechsquad/tree/master/reference/qa) implemented with Huggingface Transformers DistilBERT trained on SQUAD 2.0.
+    - For Text-to-Speech, we recommend [MaryTTS](http://mary.dfki.de/) but are not providing an implementation at this time.
+
+Reference implementation with GPU acceleration using NVIDIA Jarvis will be available soon. Learn more about Jarvis and signup to be notified of public beta access at https://developer.nvidia.com/nvidia-jarvis.
 
 Not currently provided:
 - There is currently no leaderboard or other official list of scores.
