@@ -44,6 +44,7 @@ DEFINE_string(logging_name, "speech_squad", "possibly change this if you have mu
 DEFINE_string(asr_service_url, "asr.jarvis.nvda:80", "url for jarvis asr endpoint");
 DEFINE_string(nlp_service_url, "nlp.jarvis.nvda:80", "url for jarvis nlp endpoint");
 DEFINE_string(tts_service_url, "tts.jarvis.nvda:80", "url for jarvis tts endpoint");
+DEFINE_string(asr_model_name, "quartznet-asr-trt-ensemble-vad-streaming", "model to user for ASR");
 DEFINE_int32(threads, 10, "number of forward progress threads / completion queues");
 DEFINE_int32(contexts_per_thread, 100, "maximum number of concurrent contexts allowed to be in flight");
 DEFINE_int32(channels, 50, "number of channels");
@@ -62,7 +63,7 @@ int main(int argc, char* argv[])
     std::string nlp_url = FLAGS_nlp_service_url;
     std::string tts_url = FLAGS_tts_service_url;
 
-    auto resources     = std::make_shared<SpeechSquadResources>(asr_url, nlp_url, tts_url, FLAGS_threads, FLAGS_channels);
+    auto resources     = std::make_shared<SpeechSquadResources>(asr_url, nlp_url, tts_url, FLAGS_threads, FLAGS_channels, FLAGS_asr_model_name);
     auto executor      = server->RegisterExecutor(new executor_t(FLAGS_threads));
     auto service       = server->RegisterAsyncService<SpeechSquadService>();
     auto rpc_streaming = service->RegisterRPC<SpeechSquadContext>(&SpeechSquadService::AsyncService::RequestSpeechSquadInfer);
