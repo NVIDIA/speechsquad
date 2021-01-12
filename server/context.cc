@@ -84,7 +84,7 @@ void SpeechSquadContext::RequestReceived(Input &&input, std::shared_ptr<ServerSt
         config->set_enable_word_time_offsets(false);
         config->set_enable_automatic_punctuation(false);
         config->set_enable_separate_recognition_per_channel(false);
-        config->set_model("jasper-asr-trt-ensemble-streaming-greedy");
+        config->set_model(GetResources()->get_model());
 
         DVLOG(2) << "sample rate: " << input.speech_squad_config().input_audio_config().sample_rate_hertz();
         DVLOG(2) << "channels   : " << input.speech_squad_config().input_audio_config().audio_channel_count();

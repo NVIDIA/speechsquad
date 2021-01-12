@@ -56,7 +56,7 @@ std::shared_ptr<T> get_stub(std::vector<std::shared_ptr<T>> stubs)
     return stubs[r2];
 }
 
-SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_url, std::string tts_url, int threads, int channels)
+SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_url, std::string tts_url, int threads, int channels, std::string asr_model_name)
     : m_client_executor(std::make_shared<nvrpc::client::Executor>(threads))
 {
     LOG(INFO) << "jarvis asr connection established to " << asr_url;
@@ -66,7 +66,7 @@ SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_
     m_asr_stubs.reserve(channels);
     m_nlp_stubs.reserve(channels);
     m_tts_stubs.reserve(channels);
-
+    m_asr_model_name = asr_model_name;
     for (int i = 0; i < channels; i++)
     {
         auto asr_channel = grpc::CreateChannel(asr_url, grpc::InsecureChannelCredentials());
@@ -89,6 +89,13 @@ SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_
 }
 
 SpeechSquadResources::~SpeechSquadResources() {}
+
+std::string SpeechSquadResources::get_model()
+{
+
+    return m_asr_model_name;
+
+}
 
 std::unique_ptr<asr_client_t> SpeechSquadResources::create_asr_client(SpeechSquadContext *context)
 {
