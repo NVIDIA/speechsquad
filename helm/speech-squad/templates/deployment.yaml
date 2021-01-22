@@ -1,0 +1,122 @@
+# Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of NVIDIA CORPORATION nor the names of its
+#    contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+# OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+{{- $root := . }}
+{{- $releaseName := .Release.Name -}}
+{{- $releaseService := .Release.Service -}}
+{{- $ssChart :=  include "speech-squad.chart" . }}
+{{- $ssName := include "speech-squad.name" . }}
+{{- $ssfn := include "speech-squad.fullname" . }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  {{ .Values.clnt.appName | quote }}
+  labels:
+    app: {{ .Values.clnt.appName | quote }}
+    release:  {{ .Values.clnt.version | quote }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.clnt.appName | quote }}
+      release: {{ .Values.clnt.version | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.clnt.appName | quote }}
+        release: {{ .Values.clnt.version | quote }}
+    spec:
+      hostAliases:
+      - ip: {{ .Values.sss.lb_ip | quote }}
+        hostnames:
+        - "speechsquad.jarvis.nvda"
+        - {{ .Values.sss.nlp_uri }}
+        - {{ .Values.sss.tts_uri }}
+        - {{ .Values.sss.asr_uri }}
+      imagePullSecrets:
+        - name: imagepullsecret
+      containers:
+        - name: speechsquadclnt
+          image:  {{ .Values.clnt.imageName | quote }}
+          command: ["/bin/bash"]
+          args: ["-c", "while true; do sleep 5; done"]
+
+          volumeMounts:
+            - name: data
+              mountPath: /work/test_files/speech_squad/
+      volumes:
+        - name: data
+          hostPath:
+            path: /sss_data/
+            type: Directory
+      #nodeSelector:
+      #  node.kubernetes.io/instance-type: m5.2xlarge # AWS instances
+      #  cloud.google.com/gke-nodepool: cpu30-pool    # gke nodepools
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.sss.appName | quote }}
+  labels:
+    app: {{ .Values.sss.appName | quote }}
+    release: {{ .Values.sss.version | quote }}
+spec:
+  replicas: {{ .Values.sss.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.sss.appName | quote }}
+      release: {{ .Values.sss.version | quote }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.sss.appName | quote }}
+        release: {{ .Values.sss.version | quote }}
+    spec:
+      hostAliases:
+      - ip: {{ .Values.sss.lb_ip | quote }}
+        hostnames:
+        - {{ .Values.sss.nlp_uri }}
+        - {{ .Values.sss.tts_uri }}
+        - {{ .Values.sss.asr_uri }}
+      containers:
+        - name: speechsquadsvr
+          image: {{ .Values.sss.imageName | quote }}
+          args:
+            - "speechsquad_server"
+            - "--v=1"
+            - "--nlp_service_url={{- .Values.sss.nlp_uri }}:{{ .Values.sss.jarvis_port }}"
+            - "--asr_service_url={{- .Values.sss.asr_uri }}:{{ .Values.sss.jarvis_port }}"
+            - "--tts_service_url={{- .Values.sss.tts_uri }}:{{ .Values.sss.jarvis_port }}"
+          ports:
+            - containerPort: {{ .Values.sss.port }}
+              name: {{ .Values.sss.portName | quote }}
+      imagePullSecrets:
+        - name: imagepullsecret
+      #nodeSelector:
+      #  node.kubernetes.io/instance-type: m5.2xlarge
+
+---
