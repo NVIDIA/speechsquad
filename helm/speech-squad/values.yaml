@@ -1,0 +1,78 @@
+# Copyright (c) 2019, NVIDIA CORPORATION. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#  * Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#  * Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#  * Neither the name of NVIDIA CORPORATION nor the names of its
+#    contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+# OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+replicaCount: 1
+
+sss:
+  appName: "speechsquad"
+  imageName: "nvcr.io/ea-jarvis-stage/speech_squad:1.0.0b1-rc3"
+  version: "1.0.0b1-rc3"
+  replicas: 1
+  port: 1337
+  namespace: "default"
+  lb_ip: "10.42.0.190"
+  portName: "ssquad-grpc"
+  hostName: "speechsquad.jarvis.nvda"
+  nlp_uri: "jarvis.nvda"
+  asr_uri: "jarvis.nvda"
+  tts_uri: "jarvis.nvda"
+  jarvis_port: "80"
+clnt:
+  appName: "clnt-ss"
+  version: "1.0.0b1-rc3"
+  imageName: "nvcr.io/ea-jarvis-stage/speech_squad:1.0.0b1-rc3"
+
+ngcCredentials:
+  registry: nvcr.io
+  username: $oauthtoken
+  password:
+  email:
+
+service:
+  type: ClusterIP
+
+# Optional setup to create an ingress controller and LoadBalancer
+# Ingress and LB need to be already installed and setup - this section just configures.
+# This example uses traefik (https://metallb.universe.tf/), modify to suit your needs.
+ingress:
+  # to use a default bare bones ingress controller.
+  useIngress: true
+  class: traefik
+  # should be the fqdn for your service.
+  hostname: speechsquad.jarvis.nvda
+
+
+# If your installation will expose the service outside of the kubernetes cluster
+# you will need to decide how to expose the service. If you use Loadbalancer and
+# are not in a cloud service provider your cluster needs some way of connecting a
+# service to an IP.
+# If you dont want to use a loadbalancer make sure to edit the service type above.
+# this section configures, but does not install metallb. (https://metallb.universe.tf/)
+loadbalancer:
+  # false - do nothing.  True sets up the ipRange as allocatable IP's to services.
+  useMetalLB: false
+  # the range of IP's available to your cluster. (ipRange: 192.168.1.240-192.168.1.250)
+  ipRange: 10.42.0.190-10.42.0.191
