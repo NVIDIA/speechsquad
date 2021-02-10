@@ -177,11 +177,7 @@ void AudioTask::ReceiveResponse(SpeechSquadInferResponse &&response) {
         auto itr = response.metadata().component_timing().find(component);
         if (itr != response.metadata().component_timing().end()) {
           result_->component_timings[component] = itr->second;
-        } else {
-          task_status_ =
-              Status(Status::Code::INTERNAL,
-                     "Unable to find " + component + " in the response");
-        }
+        } 
       }
     }
   } else {
