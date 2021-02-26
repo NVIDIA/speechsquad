@@ -28,8 +28,8 @@ replicaCount: 1
 
 sss:
   appName: "speechsquad"
-  imageName: "nvcr.io/ea-jarvis-stage/speech_squad:1.0.0b1-rc3"
-  version: "1.0.0b1-rc3"
+  imageName: "nvcr.io/nvidia/jarvis/speech_squad:1.0.0-b.1"
+  version: "1.0.0-b.1"
   replicas: 1
   port: 1337
   namespace: "default"
@@ -42,8 +42,8 @@ sss:
   jarvis_port: "80"
 clnt:
   appName: "clnt-ss"
-  version: "1.0.0b1-rc3"
-  imageName: "nvcr.io/ea-jarvis-stage/speech_squad:1.0.0b1-rc3"
+  version: "1.0.0-b.1"
+  imageName: "nvcr.io/nvidia/jarvis/speech_squad:1.0.0-b.1"
 
 ngcCredentials:
   registry: nvcr.io
