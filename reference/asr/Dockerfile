@@ -90,9 +90,9 @@ COPY . .
 RUN bazel build  //:kaldi_cpu_asr_server
 
 
-# create jarvis server image
-# FROM ubuntu:18.04 AS jarvis-api
-FROM nvidia/cuda:11.0-base-ubuntu18.04 AS jarvis-api
+# create riva server image
+# FROM ubuntu:18.04 AS riva-api
+FROM nvidia/cuda:11.0-base-ubuntu18.04 AS riva-api
 
 RUN apt-get update && apt-get install -y \
     flac \

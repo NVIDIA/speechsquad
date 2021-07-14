@@ -43,9 +43,9 @@ namespace demo
     private:
         std::string                                                        m_asr_model_name;
         std::shared_ptr<nvrpc::client::Executor>                           m_client_executor;
-        std::vector<std::shared_ptr<nvidia::jarvis::asr::JarvisASR::Stub>> m_asr_stubs;
-        std::vector<std::shared_ptr<nvidia::jarvis::nlp::JarvisNLP::Stub>> m_nlp_stubs;
-        std::vector<std::shared_ptr<nvidia::jarvis::tts::JarvisTTS::Stub>> m_tts_stubs;
+        std::vector<std::shared_ptr<nvidia::riva::asr::RivaSpeechRecognition::Stub>> m_asr_stubs;
+        std::vector<std::shared_ptr<nvidia::riva::nlp::RivaNaturalLanguage::Stub>> m_nlp_stubs;
+        std::vector<std::shared_ptr<nvidia::riva::tts::RivaSpeechSynthesis::Stub>> m_tts_stubs;
     };
 
 } // namespace demo

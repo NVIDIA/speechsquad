@@ -32,16 +32,17 @@ INCLUDE(GRPCGenerateCPP)
 
 PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HDRS
     ../../reference/speech_squad.proto
-    ../../server/proto/jarvis_asr.proto
-    ../../server/proto/jarvis_tts.proto
-    ../../server/proto/jarvis_nlp.proto
+    ../../server/proto/riva_asr.proto
+    ../../server/proto/riva_tts.proto
+    ../../server/proto/riva_nlp.proto
+    ../../server/proto/riva_audio.proto
 )
 
 PROTOBUF_GENERATE_GRPC_CPP(PROTO_GRPC_SRCS PROTO_GRPC_HDRS
     ../../reference/speech_squad.proto
-    ../../server/proto/jarvis_asr.proto
-    ../../server/proto/jarvis_nlp.proto
-    ../../server/proto/jarvis_tts.proto
+    ../../server/proto/riva_asr.proto
+    ../../server/proto/riva_nlp.proto
+    ../../server/proto/riva_tts.proto
 )
 
 #include_directories(${PROTO_HDRS},${PROTO_GRPC_HDRS})

@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-package nvidia.jarvis.asr;
+package nvidia.riva.asr;
 
 option cc_enable_arenas = true;
 
@@ -45,9 +45,9 @@ enum AudioEncoding {
 }
 
 /*
- * The JarvisASR service provides two mechanisms for converting speech to text.
+ * The RivaASR service provides two mechanisms for converting speech to text.
  */
-service JarvisASR {
+service RivaASR {
   // Recognize expects a RecognizeRequest and returns a RecognizeResponse. This
   // request will block until the audio is uploaded, processed, and a transcript
   // is returned.
@@ -75,7 +75,7 @@ message RecognizeRequest {
 
 /*
  * A StreamingRecognizeRequest is used to configure and stream audio content to
- * the Jarvis ASR Service. The first message sent must include only a
+ * the Riva ASR Service. The first message sent must include only a
  * StreamingRecognitionConfig. Subsequent messages sent in the stream must
  * contain only raw bytes of the audio to be recognized.
  */

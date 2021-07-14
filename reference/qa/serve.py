@@ -23,17 +23,17 @@ import logging
 import argparse
 import grpc
 
-import jarvis_nlp_pb2
-import jarvis_nlp_pb2_grpc
+import riva_nlp_pb2
+import riva_nlp_pb2_grpc
 
 def get_args():
-    parser = argparse.ArgumentParser(description="Jarvis Question Answering client sample")
+    parser = argparse.ArgumentParser(description="Riva Question Answering client sample")
     parser.add_argument("--listen", default="[::]:50052", type=str, help="Address to listen to")
     parser.add_argument("--model-name", default="twmkn9/bert-base-uncased-squad2", type=str, help="pretrained HF model to use")
     parser.add_argument("--model-cache", default="/data/models", type=str, help="path to location to store downloaded checkpoints")
     return parser.parse_args()
 
-class JarvisNLPServicer(jarvis_nlp_pb2_grpc.JarvisNLPServicer):
+class RivaNLPServicer(riva_nlp_pb2_grpc.RivaNLPServicer):
     def __init__(self, model_name, cache=None):
         tokenizer = AutoTokenizer.from_pretrained(model_name, cache_dir=cache)
         model = AutoModelForQuestionAnswering.from_pretrained(model_name, cache_dir=cache)
@@ -49,14 +49,14 @@ class JarvisNLPServicer(jarvis_nlp_pb2_grpc.JarvisNLPServicer):
             'question': str(request.query),
             'context': str(request.context)
         }, handle_impossible_answer=True)
-        response = jarvis_nlp_pb2.NaturalQueryResponse()
-        response.results.append(jarvis_nlp_pb2.NaturalQueryResult(answer=result['answer'], score=result['score']))
+        response = riva_nlp_pb2.NaturalQueryResponse()
+        response.results.append(riva_nlp_pb2.NaturalQueryResult(answer=result['answer'], score=result['score']))
         return response
 
 def serve(uri="[::]:50051", model="twmkn9/distilbert-base-uncased-squad2", model_cache=None):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=multiprocessing.cpu_count()))
-    jarvis_nlp_pb2_grpc.add_JarvisNLPServicer_to_server(
-        JarvisNLPServicer(model, cache=model_cache), server)
+    riva_nlp_pb2_grpc.add_RivaNLPServicer_to_server(
+        RivaNLPServicer(model, cache=model_cache), server)
     server.add_insecure_port(uri,)
     server.start()
     server.wait_for_termination()

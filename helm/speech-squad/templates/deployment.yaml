@@ -53,7 +53,7 @@ spec:
       hostAliases:
       - ip: {{ .Values.sss.lb_ip | quote }}
         hostnames:
-        - "speechsquad.jarvis.nvda"
+        - "speechsquad.riva.nvda"
         - {{ .Values.sss.nlp_uri }}
         - {{ .Values.sss.tts_uri }}
         - {{ .Values.sss.asr_uri }}
@@ -108,9 +108,9 @@ spec:
           args:
             - "speechsquad_server"
             - "--v=1"
-            - "--nlp_service_url={{- .Values.sss.nlp_uri }}:{{ .Values.sss.jarvis_port }}"
-            - "--asr_service_url={{- .Values.sss.asr_uri }}:{{ .Values.sss.jarvis_port }}"
-            - "--tts_service_url={{- .Values.sss.tts_uri }}:{{ .Values.sss.jarvis_port }}"
+            - "--nlp_service_url={{- .Values.sss.nlp_uri }}:{{ .Values.sss.riva_port }}"
+            - "--asr_service_url={{- .Values.sss.asr_uri }}:{{ .Values.sss.riva_port }}"
+            - "--tts_service_url={{- .Values.sss.tts_uri }}:{{ .Values.sss.riva_port }}"
           ports:
             - containerPort: {{ .Values.sss.port }}
               name: {{ .Values.sss.portName | quote }}

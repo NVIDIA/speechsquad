@@ -68,7 +68,7 @@ void SpeechSquadContext::RequestReceived(Input &&input, std::shared_ptr<ServerSt
         // extract the context from the initial request
         m_context = input.speech_squad_config().squad_context();
 
-        // initialize the jarvis async asr stream with the input audio config
+        // initialize the riva async asr stream with the input audio config
         DCHECK(input.speech_squad_config().input_audio_config().encoding() == AudioEncoding::LINEAR_PCM);
 
         // asr configure request
@@ -93,13 +93,13 @@ void SpeechSquadContext::RequestReceived(Input &&input, std::shared_ptr<ServerSt
         // save tts config for when we issue the tts request
         m_tts_config = input.speech_squad_config().output_audio_config();
 
-        // write/send the initial request to jarvis asr
-        VLOG(1) << this << ": initiating jarvis asr";
+        // write/send the initial request to riva asr
+        VLOG(1) << this << ": initiating riva asr";
         m_asr_client->Write(std::move(request));
     }
     else
     {
-        // forward audio from speech squad input to jarvis asr
+        // forward audio from speech squad input to riva asr
         if (m_state != State::ReceivingAudio)
         {
             LOG(ERROR) << "squad stream received an unexpected request without a configuration message";
@@ -108,7 +108,7 @@ void SpeechSquadContext::RequestReceived(Input &&input, std::shared_ptr<ServerSt
             return;
         }
 
-        VLOG(2) << this << ": forwaring audio to jarvis asr; bytes=" << input.audio_content().size();
+        VLOG(2) << this << ": forwaring audio to riva asr; bytes=" << input.audio_content().size();
         asr_request_t request;
         request.set_audio_content(input.audio_content());
         m_asr_client->Write(std::move(request));
@@ -126,9 +126,9 @@ void SpeechSquadContext::RequestsFinished(std::shared_ptr<ServerStream> stream)
     }
     m_state = State::AudioUploadComplete;
 
-    VLOG(1) << this << ": speech squad client closed asr upload stream; closing jarvis asr upload";
+    VLOG(1) << this << ": speech squad client closed asr upload stream; closing riva asr upload";
 
-    // close upload to jarvis asr stream
+    // close upload to riva asr stream
     m_asr_writes_done = std::chrono::high_resolution_clock::now();
     m_asr_client->CloseWrites();
 }
@@ -160,7 +160,7 @@ void SpeechSquadContext::ASRCallbackOnResponse(asr_response_t &&response)
 
     m_question = top_candidate.transcript() + "?";
 
-    VLOG(1) << this << ": jarvis asr result " << std::endl
+    VLOG(1) << this << ": riva asr result " << std::endl
             << "q: " << m_question << "; confidence=" << top_candidate.confidence();
 }
 
@@ -247,7 +247,7 @@ void SpeechSquadContext::NLPCallbackOnResponse(const nlp_response_t &response)
     // setup the tts request
     tts_request_t request;
     request.set_text((m_answer.size() ? m_answer : "No answer"));
-    request.set_encoding(nvidia::jarvis::tts::AudioEncoding::LINEAR_PCM);
+    request.set_encoding(nvidia::riva::AudioEncoding::LINEAR_PCM);
     request.set_sample_rate_hz(22050);
     request.set_language_code(m_tts_config.language_code());
     request.set_voice_name("ljspeech");
@@ -326,7 +326,7 @@ void SpeechSquadContext::TTSCallbackOnComplete(const ::grpc::Status &status, con
     // send component timings
     SpeechSquadInferResponse response;
 
-    // jarvis latencies extracted from trailing meta data
+    // riva latencies extracted from trailing meta data
     auto timings = response.mutable_metadata()->mutable_component_timing();
     for (auto it = m_timings.cbegin(); it != m_timings.cend(); it++)
     {
