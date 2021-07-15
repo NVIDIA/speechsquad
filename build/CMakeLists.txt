@@ -25,8 +25,8 @@ include(GNUInstallDirs)
 #
 # FIXME: Use the official repository once build is fixed
 ExternalProject_Add(trtlab
-  GIT_REPOSITORY "https://github.com/tanmayv25/tensorrt-laboratory.git"
-  GIT_TAG "tanmayv-speech-squad"
+  GIT_REPOSITORY "https://github.com/junkin/tensorrt-laboratory.git"
+  GIT_TAG "junkin-rename"
   SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/tensorrt-laboratory"
   CMAKE_CACHE_ARGS
     -DBUILD_TENSORRT:BOOL=OFF
