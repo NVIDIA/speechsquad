@@ -74,7 +74,7 @@ SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_
         m_asr_stubs.push_back(std::move(asr_stub));
 
         auto nlp_channel = grpc::CreateChannel(nlp_url, grpc::InsecureChannelCredentials());
-        auto nlp_stub = nvidia::riva::nlp::RivaNaturalLanguage::NewStub(nlp_channel);
+        auto nlp_stub = nvidia::riva::nlp::RivaLanguageUnderstanding::NewStub(nlp_channel);
         m_nlp_stubs.push_back(std::move(nlp_stub));
 
         auto tts_channel = grpc::CreateChannel(tts_url, grpc::InsecureChannelCredentials());
