@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#ifndef JARVIS_SRC_SERVICES_GRPC_JARVIS_ASR_H_
-#define JARVIS_SRC_SERVICES_GRPC_JARVIS_ASR_H_
+#ifndef RIVA_SRC_SERVICES_GRPC_RIVA_ASR_H_
+#define RIVA_SRC_SERVICES_GRPC_RIVA_ASR_H_
 
-#include "proto/jarvis_asr.grpc.pb.h"
+#include "proto/riva_asr.grpc.pb.h"
 #include <chrono>
 #include <condition_variable>
 #include <iostream>
@@ -31,12 +31,12 @@ using grpc::Status;
 using grpc::StatusCode;
 using namespace std::chrono_literals;
 
-namespace nj = nvidia::jarvis;
-namespace nj_asr = nvidia::jarvis::asr;
+namespace nj = nvidia::riva;
+namespace nj_asr = nvidia::riva::asr;
 
 class KaldiASRContext;
 
-class ASRServiceImpl final : public nj_asr::JarvisASR::Service {
+class ASRServiceImpl final : public nj_asr::RivaASR::Service {
   // Logic and data behind the server's behavior.
 public:
   explicit ASRServiceImpl(const std::string& kaldi_path, const std::string& kaldi_options);

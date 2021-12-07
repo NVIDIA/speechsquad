@@ -85,7 +85,7 @@ namespace demo
         // store access to the response stream
         std::shared_ptr<ServerStream> m_stream;
 
-        // jarvis clients
+        // riva clients
         std::unique_ptr<asr_client_t> m_asr_client;
         std::unique_ptr<nlp_client_t> m_nlp_client;
         std::unique_ptr<tts_client_t> m_tts_client;

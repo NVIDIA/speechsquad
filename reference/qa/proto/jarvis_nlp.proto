@@ -14,14 +14,14 @@
 
 syntax = "proto3";
 
-package nvidia.jarvis.nlp;
+package nvidia.riva.nlp;
 
 option cc_enable_arenas = true;
 
-// Jarvis NLP Services implement task-specific APIs for popular NLP tasks
+// Riva NLP Services implement task-specific APIs for popular NLP tasks
 // including intent recognition (as well as slot filling), and entity
 // extraction.
-service JarvisNLP {
+service RivaNLP {
   // NaturalQuery is a search function that enables querying one or more
   // documents or contexts with a query that is written in natural language.
   rpc NaturalQuery(NaturalQueryRequest) returns (NaturalQueryResponse) {}

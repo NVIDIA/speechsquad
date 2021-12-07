@@ -22,7 +22,7 @@ cc_library(
     hdrs = ["cpu_asr_grpc.h", "kaldi_asr.h", "wav_reader.h"],
     copts = ["-O0", "-g"],
     deps = [
-        "//proto:jarvis_grpc_asr",
+        "//proto:riva_grpc_asr",
         "@glog//:glog",
         "@com_github_gflags_gflags//:gflags",
         "@kaldi//:kaldi",

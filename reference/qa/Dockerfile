@@ -17,6 +17,6 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
 
-COPY jarvis_nlp*.py serve.py ./
+COPY riva_nlp*.py serve.py ./
 VOLUME /data/models
 CMD ["python", "serve.py"]

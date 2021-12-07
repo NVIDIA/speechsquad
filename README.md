@@ -70,7 +70,7 @@ In the current release of SpeechSquad, NVIDIA is providing the following:
     - [Question Answering gRPC service](https://github.com/nvidia/speechsquad/tree/master/reference/qa) implemented with Huggingface Transformers DistilBERT trained on SQUAD 2.0.
     - For Text-to-Speech, we recommend [MaryTTS](http://mary.dfki.de/) but are not providing an implementation at this time.
 
-Reference implementation with GPU acceleration using NVIDIA Jarvis will be available soon. Learn more about Jarvis and signup to be notified of public beta access at https://developer.nvidia.com/nvidia-jarvis.
+Reference implementation with GPU acceleration using NVIDIA Riva will be available soon. Learn more about Riva and signup to be notified of public beta access at https://developer.nvidia.com/nvidia-riva.
 
 Not currently provided:
 - There is currently no leaderboard or other official list of scores.

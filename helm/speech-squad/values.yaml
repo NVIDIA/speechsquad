@@ -28,22 +28,22 @@ replicaCount: 1
 
 sss:
   appName: "speechsquad"
-  imageName: "nvcr.io/nvidia/jarvis/speech_squad:1.0.0-b.1"
+  imageName: "nvcr.io/nvidia/riva/speech_squad:1.0.0-b.1"
   version: "1.0.0-b.1"
   replicas: 1
   port: 1337
   namespace: "default"
   lb_ip: "10.42.0.190"
   portName: "ssquad-grpc"
-  hostName: "speechsquad.jarvis.nvda"
-  nlp_uri: "jarvis.nvda"
-  asr_uri: "jarvis.nvda"
-  tts_uri: "jarvis.nvda"
-  jarvis_port: "80"
+  hostName: "speechsquad.riva.nvda"
+  nlp_uri: "riva.nvda"
+  asr_uri: "riva.nvda"
+  tts_uri: "riva.nvda"
+  riva_port: "80"
 clnt:
   appName: "clnt-ss"
   version: "1.0.0-b.1"
-  imageName: "nvcr.io/nvidia/jarvis/speech_squad:1.0.0-b.1"
+  imageName: "nvcr.io/nvidia/riva/speech_squad:1.0.0-b.1"
 
 ngcCredentials:
   registry: nvcr.io
@@ -62,7 +62,7 @@ ingress:
   useIngress: true
   class: traefik
   # should be the fqdn for your service.
-  hostname: speechsquad.jarvis.nvda
+  hostname: speechsquad.riva.nvda
 
 
 # If your installation will expose the service outside of the kubernetes cluster
