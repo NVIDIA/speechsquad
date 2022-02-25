@@ -38,12 +38,12 @@
 #include "context.h"
 #include "resources.h"
 
-// old server: "misty2-speech.jarvis-ai.nvidia.com"
+// old server: "misty2-speech.riva-ai.nvidia.com"
 
 DEFINE_string(logging_name, "speech_squad", "possibly change this if you have multiple backends");
-DEFINE_string(asr_service_url, "asr.jarvis.nvda:80", "url for jarvis asr endpoint");
-DEFINE_string(nlp_service_url, "nlp.jarvis.nvda:80", "url for jarvis nlp endpoint");
-DEFINE_string(tts_service_url, "tts.jarvis.nvda:80", "url for jarvis tts endpoint");
+DEFINE_string(asr_service_url, "asr.riva.nvda:80", "url for riva asr endpoint");
+DEFINE_string(nlp_service_url, "nlp.riva.nvda:80", "url for riva nlp endpoint");
+DEFINE_string(tts_service_url, "tts.riva.nvda:80", "url for riva tts endpoint");
 DEFINE_string(asr_model_name, "quartznet-asr-trt-ensemble-vad-streaming", "model to user for ASR");
 DEFINE_int32(threads, 10, "number of forward progress threads / completion queues");
 DEFINE_int32(contexts_per_thread, 100, "maximum number of concurrent contexts allowed to be in flight");

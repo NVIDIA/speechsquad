@@ -5,8 +5,8 @@
 
 using namespace demo;
 
-#include "jarvis_asr.grpc.pb.h"
-#include "jarvis_asr.pb.h"
+#include "riva_asr.grpc.pb.h"
+#include "riva_asr.pb.h"
 
 bool WaitUntilReady(std::shared_ptr<::grpc::ChannelInterface> channel)
 {
@@ -59,9 +59,9 @@ std::shared_ptr<T> get_stub(std::vector<std::shared_ptr<T>> stubs)
 SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_url, std::string tts_url, int threads, int channels, std::string asr_model_name)
     : m_client_executor(std::make_shared<nvrpc::client::Executor>(threads))
 {
-    LOG(INFO) << "jarvis asr connection established to " << asr_url;
-    LOG(INFO) << "jarvis nlp connection established to " << nlp_url;
-    LOG(INFO) << "jarvis tts connection established to " << tts_url;
+    LOG(INFO) << "riva asr connection established to " << asr_url;
+    LOG(INFO) << "riva nlp connection established to " << nlp_url;
+    LOG(INFO) << "riva tts connection established to " << tts_url;
 
     m_asr_stubs.reserve(channels);
     m_nlp_stubs.reserve(channels);
@@ -70,18 +70,18 @@ SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_
     for (int i = 0; i < channels; i++)
     {
         auto asr_channel = grpc::CreateChannel(asr_url, grpc::InsecureChannelCredentials());
-        auto asr_stub = nvidia::jarvis::asr::JarvisASR::NewStub(asr_channel);
+        auto asr_stub = nvidia::riva::asr::RivaSpeechRecognition::NewStub(asr_channel);
         m_asr_stubs.push_back(std::move(asr_stub));
 
         auto nlp_channel = grpc::CreateChannel(nlp_url, grpc::InsecureChannelCredentials());
-        auto nlp_stub = nvidia::jarvis::nlp::JarvisNLP::NewStub(nlp_channel);
+        auto nlp_stub = nvidia::riva::nlp::RivaLanguageUnderstanding::NewStub(nlp_channel);
         m_nlp_stubs.push_back(std::move(nlp_stub));
 
         auto tts_channel = grpc::CreateChannel(tts_url, grpc::InsecureChannelCredentials());
-        auto tts_stub = nvidia::jarvis::tts::JarvisTTS::NewStub(tts_channel);
+        auto tts_stub = nvidia::riva::tts::RivaSpeechSynthesis::NewStub(tts_channel);
         m_tts_stubs.push_back(std::move(tts_stub));
 
-        DLOG(INFO) << "establishing connections to downstream jarvis services - " << i << " of " << channels;
+        DLOG(INFO) << "establishing connections to downstream riva services - " << i << " of " << channels;
         CHECK(WaitUntilReady(asr_channel)) << "failed to connect to " << asr_url;
         CHECK(WaitUntilReady(nlp_channel)) << "failed to connect to " << nlp_url;
         CHECK(WaitUntilReady(tts_channel)) << "failed to connect to " << tts_url;

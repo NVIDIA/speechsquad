@@ -17,13 +17,13 @@ package(default_visibility = ["//visibility:public"])
 load("@com_github_grpc_grpc//bazel:cc_grpc_library.bzl", "cc_grpc_library")
 
 cc_grpc_library(
-    name = "jarvis_grpc_speech_squad",
-    srcs = [":jarvis_speech_squad.proto"],
+    name = "riva_grpc_speech_squad",
+    srcs = [":riva_speech_squad.proto"],
     deps = []
 )
 
 cc_grpc_library(
-    name = "jarvis_grpc_asr",
-    srcs = [":jarvis_asr.proto"],
+    name = "riva_grpc_asr",
+    srcs = [":riva_asr.proto"],
     deps = [],
 )

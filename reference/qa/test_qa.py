@@ -17,12 +17,12 @@ import time
 import argparse
 import fastcounter
 
-import jarvis_nlp_pb2 as jnlp
-import jarvis_nlp_pb2_grpc as jnlp_srv
+import riva_nlp_pb2 as jnlp
+import riva_nlp_pb2_grpc as jnlp_srv
 
 def get_args():
-  parser = argparse.ArgumentParser(description="Jarvis Question Answering client sample")
-  parser.add_argument("--jarvis-uri", default="localhost:50052", type=str, help="URI to access Jarvis server")
+  parser = argparse.ArgumentParser(description="Riva Question Answering client sample")
+  parser.add_argument("--riva-uri", default="localhost:50052", type=str, help="URI to access Riva server")
   parser.add_argument("--iterations", default=10, type=int, help="number of queries to make")
 
 
@@ -30,9 +30,9 @@ def get_args():
 
 parser = get_args()
 
-grpc_server = parser.jarvis_uri
+grpc_server = parser.riva_uri
 channel = grpc.insecure_channel(grpc_server)
-jarvis_nlp = jnlp_srv.JarvisNLPStub(channel)
+riva_nlp = jnlp_srv.RivaNLPStub(channel)
 
 ok_counter = fastcounter.Counter()
 bad_counter = fastcounter.Counter()
@@ -70,7 +70,7 @@ def run(iterations):
 
   req.context = test_context
   for x in range(iterations):
-      resp_future = jarvis_nlp.NaturalQuery.future(req)
+      resp_future = riva_nlp.NaturalQuery.future(req)
       resp_future.add_done_callback(process_response)
 
 if __name__ == '__main__':

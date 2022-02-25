@@ -1,7 +1,7 @@
 # ASR Server using Kaldi : Open-source CPU Reference Implementation
 
 This directory contains reference implementation of a simple GRPC Speech Recognition Server utilizing popular Kaldi C++ ASR Library on CPU.
-The server is multi-threaded (each request executes on its own thread), implements API described in `jarvis_asr.proto`.
+The server is multi-threaded (each request executes on its own thread), implements API described in `riva_asr.proto`.
 
 ## Building Container Image (Ubuntu Linux)
 
