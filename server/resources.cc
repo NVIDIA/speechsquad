@@ -82,9 +82,18 @@ SpeechSquadResources::SpeechSquadResources(std::string asr_url, std::string nlp_
         m_tts_stubs.push_back(std::move(tts_stub));
 
         DLOG(INFO) << "establishing connections to downstream riva services - " << i << " of " << channels;
-        CHECK(WaitUntilReady(asr_channel)) << "failed to connect to " << asr_url;
-        CHECK(WaitUntilReady(nlp_channel)) << "failed to connect to " << nlp_url;
-        CHECK(WaitUntilReady(tts_channel)) << "failed to connect to " << tts_url;
+        if(!WaitUntilReady(asr_channel)) {
+            LOG(ERROR) << "failed to connect to " << asr_url;
+            exit(-1);
+        }
+        if(!WaitUntilReady(nlp_channel)) {
+            LOG(ERROR) << "failed to connect to " << nlp_url;
+            exit(-1);
+        }
+        if (!(WaitUntilReady(tts_channel))) {
+            LOG(ERROR) << "failed to connect to " << tts_url;
+            exit(-1);
+        }
     }
 }
 
